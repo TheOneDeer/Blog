@@ -1,0 +1,104 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
+你是一位资深前端工程师，熟悉 Vue3 + TypeScript + Vite + Pinia 技术栈。请根据以下产品需求，输出一份前端开发实现方案。
+
+【产品需求描述】
+根据用户输入的需求文档识别
+
+【技术栈】
+- 框架：Vue3（Composition API）
+- 状态管理：Pinia
+- UI 库：Element Plus 或 Ant Design Vue
+- 构建工具：Vite
+- API 调用：Axios + TypeScript 接口类型定义
+
+请按以下结构输出，使用 Markdown 格式：
+
+# 前端开发实现方案
+
+## 1. 页面结构与路由
+- 路由路径：`/product/:id`
+- 页面层级结构（Header → Content → Sidebar → Footer）
+
+## 2. 组件拆分方案
+列出主要组件及其职责，例如：
+- `ProductCarousel`：商品图片轮播
+- `ProductInfo`：显示标题、价格、库存
+- `BuyButton`：购买/加入购物车按钮
+- `ReviewList`：用户评价列表
+
+## 3. 状态管理设计（Pinia）
+- 定义 Store 模块：`productStore`
+- 包含 state（productDetail）、actions（fetchProduct）、getters（isInStock）
+
+## 4. API 接口对接
+- 映射后端接口 `/api/v1/products/:id`
+- 定义 TypeScript 接口类型：
+  ```ts
+  interface Product {
+    id: number;
+    name: string;
+    price: number;
+    stock: number;
+    images: string[];
+    reviews: Review[];
+  }
+
+  5. 关键交互逻辑
+页面初始化：onMounted 中调用 API 获取数据
+错误处理：网络失败时显示重试按钮
+骨架屏（Skeleton）加载状态
+图片懒加载（v-lazy 或 Intersection Observer）
+6. 响应式与可访问性
+适配移动端（使用 CSS Grid/Flex + 媒体查询）
+ARIA 标签支持屏幕阅读器
+键盘导航支持
+7. 性能优化
+图片压缩与 CDN 加载
+组件懒加载（defineAsyncComponent）
+防抖搜索（如评价筛选）
+要求：组件设计合理，类型安全，符合现代前端工程化实践，可直接用于开发。
+
+
+---
+
+### 📌 3. **生成 API 接口文档（快速版）**
+
+```prompt
+你是一名 API 设计专家，请根据以下功能描述，生成一组符合 RESTful 规范的 API 接口文档。
+
+【功能描述】
+<例如：实现博客文章的增删改查（CRUD）>
+
+【基础信息】
+- 基础路径：/api/v1/posts
+- 认证方式：Bearer Token（JWT）
+- 返回格式：JSON（统一 { code, message, data }）
+
+请生成以下接口：
+1. 获取文章列表（支持分页、分类筛选）
+2. 获取单篇文章详情
+3. 创建新文章
+4. 更新文章
+5. 删除文章
+
+每个接口包含：
+- 路径与方法
+- 请求参数（Query/Body）
+- 响应示例（成功 + 失败）
+- 权限说明
+
+请使用 Markdown 表格整理输出，格式如下：
+
+| 接口 | 方法 | 描述 | 权限 |
+|------|------|------|------|
+| `/posts` | GET | 获取文章列表 | 无需登录 |
+| `/posts` | POST | 创建文章 | 用户登录 |  
+
+并在下方提供每个接口的详细说明和 JSON 示例。
+
+

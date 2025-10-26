@@ -1,0 +1,41 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
+你是一名数据库设计专家，请根据以下业务需求，设计合理的 MySQL 数据库表结构。
+
+【业务需求】
+<例如：一个电商系统，包含用户、商品、订单、购物车模块>
+
+请设计以下实体：
+- 用户（User）
+- 商品（Product）
+- 订单（Order）
+- 订单项（OrderItem）
+- 购物车（Cart）
+
+要求：
+- 使用 InnoDB 引擎，utf8mb4 字符集
+- 主键使用 BIGINT 自增
+- 包含创建时间、更新时间字段
+- 合理设置索引（如用户邮箱、订单状态）
+- 外键关联（如订单属于用户，订单项属于订单）
+- 提供完整的 CREATE TABLE 语句
+
+输出格式：
+```sql
+-- 用户表
+CREATE TABLE `user` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `username` VARCHAR(50) NOT NULL UNIQUE,
+  ...
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 订单表
+CREATE TABLE `order` (
+  ...
+);
+
+并简要说明各表之间的关系（如：一对多、多对多）。
