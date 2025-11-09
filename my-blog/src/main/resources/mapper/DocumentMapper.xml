@@ -71,4 +71,12 @@
         UPDATE document SET status = 0 WHERE id = #{id}
     </update>
 
+    <update id="incrementViewCount">
+        UPDATE document SET view_count = view_count + 1 WHERE id = #{id}
+    </update>
+
+    <update id="incrementDownloadCount">
+        UPDATE document SET download_count = download_count + 1 WHERE id = #{id}
+    </update>
+
 </mapper>

@@ -16,9 +16,40 @@ const routes = [
   },
   {
     path: '/',
-    name: 'Home',
-    component: () => import('@/views/Home.vue'),
-    meta: { title: '首页', requiresAuth: true }
+    component: () => import('@/components/layout/AppLayout.vue'),
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '',
+        name: 'DocumentList',
+        component: () => import('@/views/document/DocumentList.vue'),
+        meta: { title: '文档列表' }
+      },
+      {
+        path: 'documents/upload',
+        name: 'DocumentUpload',
+        component: () => import('@/views/document/DocumentUpload.vue'),
+        meta: { title: '上传文档' }
+      },
+      {
+        path: 'documents/:id',
+        name: 'DocumentDetail',
+        component: () => import('@/views/document/DocumentDetail.vue'),
+        meta: { title: '文档详情' }
+      },
+      {
+        path: 'categories',
+        name: 'CategoryManager',
+        component: () => import('@/views/category/CategoryManager.vue'),
+        meta: { title: '分类管理' }
+      },
+      {
+        path: 'search',
+        name: 'SearchResult',
+        component: () => import('@/views/search/SearchResult.vue'),
+        meta: { title: '搜索结果' }
+      }
+    ]
   }
 ]
 
@@ -31,7 +62,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
   
-  // 需要认证的页面
+  // 需要认证的页面（包括父路由）
   if (to.meta.requiresAuth && !userStore.isAuthenticated) {
     next({ name: 'Login', query: { redirect: to.fullPath } })
     return
@@ -41,6 +72,11 @@ router.beforeEach((to, from, next) => {
   if ((to.name === 'Login' || to.name === 'Register') && userStore.isAuthenticated) {
     next('/')
     return
+  }
+  
+  // 设置页面标题
+  if (to.meta.title) {
+    document.title = `${to.meta.title} - 个人博客系统`
   }
   
   next()

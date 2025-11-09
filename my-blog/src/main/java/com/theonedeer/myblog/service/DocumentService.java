@@ -14,8 +14,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -73,6 +81,9 @@ public class DocumentService {
             throw new BusinessException("文件保存失败");
         }
 
+        // 获取文件类型（根据扩展名，避免MIME类型过长）
+        String fileType = getFileType(originalFilename);
+        
         // 创建文档记录
         Document document = new Document();
         document.setUserId(userId);
@@ -82,7 +93,7 @@ public class DocumentService {
         document.setFileOriginalName(originalFilename);
         document.setFilePath(filePath.toString());
         document.setFileUrl(urlPrefix + fileName);
-        document.setFileType(file.getContentType());
+        document.setFileType(fileType);
         document.setFileSize(file.getSize());
         document.setCategoryId(request.getCategoryId());
         document.setViewCount(0);
@@ -109,6 +120,9 @@ public class DocumentService {
         if (!document.getUserId().equals(userId)) {
             throw new BusinessException(403, "无权访问");
         }
+
+        // 增加浏览次数
+        documentMapper.incrementViewCount(id);
 
         return convertToDTO(document);
     }
@@ -203,6 +217,18 @@ public class DocumentService {
     }
 
     /**
+     * 根据文件名获取文件类型（简短的扩展名，避免MIME类型过长）
+     */
+    private String getFileType(String filename) {
+        if (filename == null || !filename.contains(".")) {
+            return "unknown";
+        }
+        String extension = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
+        // 返回扩展名，最多50个字符（数据库字段限制）
+        return extension.length() > 50 ? extension.substring(0, 50) : extension;
+    }
+
+    /**
      * 搜索文档
      */
     public SearchResponse searchDocuments(Long userId, String keyword, Integer page, Integer pageSize) {
@@ -224,6 +250,45 @@ public class DocumentService {
             .collect(Collectors.toList()));
         
         return response;
+    }
+
+    /**
+     * 下载文档
+     */
+    public ResponseEntity<Resource> downloadDocument(Long id, Long userId) {
+        Document document = documentMapper.findById(id);
+        if (document == null) {
+            throw new BusinessException(404, "文档不存在");
+        }
+
+        // 检查是否有权限访问
+        if (!document.getUserId().equals(userId)) {
+            throw new BusinessException(403, "无权访问");
+        }
+
+        // 获取文件
+        Path filePath = Paths.get(document.getFilePath());
+        File file = filePath.toFile();
+        
+        if (!file.exists()) {
+            throw new BusinessException(404, "文件不存在");
+        }
+
+        // 增加下载次数
+        documentMapper.incrementDownloadCount(id);
+
+        // 创建资源
+        Resource resource = new FileSystemResource(file);
+
+        // 设置响应头
+        String encodedFilename = URLEncoder.encode(document.getFileOriginalName(), StandardCharsets.UTF_8)
+                .replaceAll("\\+", "%20");
+        
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, 
+                        "attachment; filename=\"" + encodedFilename + "\"; filename*=UTF-8''" + encodedFilename)
+                .body(resource);
     }
 
     /**

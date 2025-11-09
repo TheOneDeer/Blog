@@ -33,4 +33,14 @@ public interface DocumentMapper {
     int update(Document document);
     
     int delete(Long id);
+    
+    /**
+     * 增加浏览次数
+     */
+    int incrementViewCount(Long id);
+    
+    /**
+     * 增加下载次数
+     */
+    int incrementDownloadCount(Long id);
 }

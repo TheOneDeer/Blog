@@ -27,11 +27,25 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        // 配置API接口的CORS
         registry.addMapping("/api/**")
                 // 允许的前端地址
                 .allowedOrigins("http://localhost:8080", "http://localhost:8081")
                 // 允许的HTTP方法
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+                // 允许的请求头
+                .allowedHeaders("*")
+                // 允许发送Cookie和认证信息
+                .allowCredentials(true)
+                // 预检请求的缓存时间（秒）
+                .maxAge(3600);
+        
+        // 配置文件访问路径的CORS
+        registry.addMapping("/files/**")
+                // 允许的前端地址
+                .allowedOrigins("http://localhost:8080", "http://localhost:8081")
+                // 允许的HTTP方法（文件访问主要是GET）
+                .allowedMethods("GET", "OPTIONS")
                 // 允许的请求头
                 .allowedHeaders("*")
                 // 允许发送Cookie和认证信息

@@ -8,6 +8,8 @@ import com.theonedeer.myblog.service.DocumentService;
 import com.theonedeer.myblog.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -84,6 +86,17 @@ public class DocumentController {
         Long userId = getUserIdFromToken(request);
         documentService.deleteDocument(id, userId);
         return Result.success("删除成功");
+    }
+
+    /**
+     * 下载文档
+     */
+    @GetMapping("/{id}/download")
+    public ResponseEntity<Resource> downloadDocument(
+            @PathVariable Long id, 
+            HttpServletRequest request) {
+        Long userId = getUserIdFromToken(request);
+        return documentService.downloadDocument(id, userId);
     }
 
     /**

@@ -12,6 +12,8 @@
     "axios": "^1.12.2",
     "core-js": "^3.8.3",
     "element-plus": "^2.11.5",
+    "lodash-es": "^4.17.21",
+    "mammoth": "^1.11.0",
     "pinia": "^3.0.3",
     "vue": "^3.2.13",
     "vue-router": "^4.6.3"
