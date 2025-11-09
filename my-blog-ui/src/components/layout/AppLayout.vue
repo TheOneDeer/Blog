@@ -42,13 +42,16 @@
       </div>
     </el-header>
     
-    <el-main class="app-main">
-      <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
-          <component :is="Component" />
-        </transition>
-      </router-view>
-    </el-main>
+    <el-container class="app-body">
+      <Sidebar />
+      <el-main class="app-main">
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
+      </el-main>
+    </el-container>
   </el-container>
 </template>
 
@@ -65,6 +68,7 @@ import {
 } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'
 import SearchBar from '@/components/common/SearchBar.vue'
+import Sidebar from './Sidebar.vue'
 
 export default {
   name: 'AppLayout',
@@ -74,7 +78,8 @@ export default {
     FolderOpened,
     ArrowDown,
     SwitchButton,
-    SearchBar
+    SearchBar,
+    Sidebar
   },
   setup() {
     const router = useRouter()
@@ -117,6 +122,10 @@ export default {
 }
 
 .app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 60px;
   background: white;
   border-bottom: 1px solid #e4e7ed;
@@ -125,6 +134,7 @@ export default {
   justify-content: space-between;
   padding: 0 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
 }
 
 .header-left {
@@ -180,7 +190,13 @@ export default {
   font-weight: 500;
 }
 
+.app-body {
+  margin-top: 60px;
+  min-height: calc(100vh - 60px);
+}
+
 .app-main {
+  margin-left: 250px;
   padding: 0;
   min-height: calc(100vh - 60px);
   background: #f5f7fa;
@@ -188,6 +204,13 @@ export default {
 
 .app-main > * {
   padding: 20px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .app-main {
+    margin-left: 0;
+  }
 }
 
 /* 页面切换动画 */

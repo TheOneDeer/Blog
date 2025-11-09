@@ -9,8 +9,12 @@ export const documentApi = {
   },
   
   // 获取文档列表
-  getList(page = 1, pageSize = 10) {
-    return request.get(`/documents?page=${page}&pageSize=${pageSize}`)
+  getList(page = 1, pageSize = 10, categoryId = null) {
+    let url = `/documents?page=${page}&pageSize=${pageSize}`
+    if (categoryId) {
+      url += `&categoryId=${categoryId}`
+    }
+    return request.get(url)
   },
   
   // 获取文档详情

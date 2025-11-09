@@ -9,14 +9,31 @@ export const useDocumentStore = defineStore('document', () => {
   const total = ref(0)
   const page = ref(1)
   const pageSize = ref(10)
+  const categoryId = ref(null)
   const loading = ref(false)
   
   // actions
-  async function fetchDocuments(reset = false) {
+  async function fetchDocuments(reset = false, filterCategoryId = null) {
     if (reset) page.value = 1
+    categoryId.value = filterCategoryId
     loading.value = true
     try {
-      const response = await documentApi.getList(page.value, pageSize.value)
+      // 如果指定了分类，尝试使用分类参数（如果后端支持）
+      // 否则加载所有文档，前端筛选
+      const response = await documentApi.getList(page.value, pageSize.value, categoryId.value)
+      documents.value = response.data.documents
+      total.value = response.data.total
+    } finally {
+      loading.value = false
+    }
+  }
+  
+  // 获取所有文档（用于前端筛选）
+  async function fetchAllDocuments() {
+    loading.value = true
+    try {
+      // 获取较大的页面大小以加载更多文档
+      const response = await documentApi.getList(1, 1000, null)
       documents.value = response.data.documents
       total.value = response.data.total
     } finally {
@@ -77,8 +94,10 @@ export const useDocumentStore = defineStore('document', () => {
     total,
     page,
     pageSize,
+    categoryId,
     loading,
     fetchDocuments,
+    fetchAllDocuments,
     fetchDocumentById,
     uploadDocument,
     updateDocument,

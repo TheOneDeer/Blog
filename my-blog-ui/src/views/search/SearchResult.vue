@@ -1,10 +1,12 @@
 <template>
   <div class="search-result-page">
     <div class="page-header">
-      <h2>搜索结果</h2>
-      <div class="search-info" v-if="keyword">
-        <span>关键词：<strong>{{ keyword }}</strong></span>
-        <span v-if="total > 0">共找到 <strong>{{ total }}</strong> 条结果</span>
+      <div>
+        <h2>搜索结果</h2>
+        <div class="search-info" v-if="keyword">
+          <span>关键词：<strong>{{ keyword }}</strong></span>
+          <span v-if="total > 0">共找到 <strong>{{ total }}</strong> 条结果</span>
+        </div>
       </div>
     </div>
     
