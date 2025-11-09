@@ -75,7 +75,7 @@ java -jar target/my-blog-0.0.1-SNAPSHOT.jar
 
 ### 5. 验证服务
 
-服务启动后访问：http://localhost:8080
+服务启动后访问：http://localhost:9080
 
 ## API文档
 
@@ -109,7 +109,7 @@ java -jar target/my-blog-0.0.1-SNAPSHOT.jar
 ### 1. 用户注册
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/users/register \
+curl -X POST http://localhost:9080/api/v1/users/register \
   -H "Content-Type: application/json" \
   -d '{
     "username": "testuser",
@@ -121,7 +121,7 @@ curl -X POST http://localhost:8080/api/v1/users/register \
 ### 2. 用户登录
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/users/login \
+curl -X POST http://localhost:9080/api/v1/users/login \
   -H "Content-Type: application/json" \
   -d '{
     "username": "testuser",
@@ -132,7 +132,7 @@ curl -X POST http://localhost:8080/api/v1/users/login \
 ### 3. 上传文档
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/documents/upload \
+curl -X POST http://localhost:9080/api/v1/documents/upload \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -F "file=@test.pdf" \
   -F "title=测试文档" \

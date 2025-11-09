@@ -2,6 +2,7 @@ package com.theonedeer.myblog.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -19,5 +20,23 @@ public class WebConfig implements WebMvcConfigurer {
         // 配置文件访问路径
         registry.addResourceHandler("/files/**")
                 .addResourceLocations("file:" + uploadDir + "/");
+    }
+
+    /**
+     * 配置CORS跨域支持
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/**")
+                // 允许的前端地址
+                .allowedOrigins("http://localhost:8080", "http://localhost:8081")
+                // 允许的HTTP方法
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+                // 允许的请求头
+                .allowedHeaders("*")
+                // 允许发送Cookie和认证信息
+                .allowCredentials(true)
+                // 预检请求的缓存时间（秒）
+                .maxAge(3600);
     }
 }
